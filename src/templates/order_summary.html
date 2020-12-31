@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% block head_title %} Order Summary{% endblock head_title%}
+{% block head %}
+  <style type="text/css">
+    html,
+    body,
+    header,
+    .carousel {
+      height: 60vh;
+    }
+
+    @media (max-width: 740px) {
+
+      html,
+      body,
+      header,
+      .carousel {
+        height: 100vh;
+      }
+    }
+
+    @media (min-width: 800px) and (max-width: 850px) {
+
+      html,
+      body,
+      header,
+      .carousel {
+        height: 100vh;
+      }
+    }
+
+  </style>
+  {% endblock head%}
+
+{% block content %}
+ 
+
+ 
+
+  <!--Main layout-->
+  <main>
+    <div class="container">
+        <div class="table-responsive">
+        <h2>Order Summary</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Sno</th>
+                    <th scope="col">Item title</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Item Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order_item in objects.items.all %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{order_item.item.title}}</td>
+                    <td>{{order_item.item.price}}</td>
+                    <td><a href="{% url 'core:remove-item-from-cart' order_item.item.slug %} "<i class="fas fa-minus mr-2"></i> {{order_item.quantity}} <a href="{% url 'core:add-item-to-cart' order_item.item.slug %}"><i class="ml-2 fas fa-plus"></i></a></td>
+                    <td>
+                      {% if order_item.item.discount_price %}
+                        {{order_item.get_total_discount_item_price}}$ <span class=" badge badge-primary p-1 ml-1 ">save {{order_item.get_save_amount}} $</span>
+                      {% else %}
+                        {{order_item.get_total_item_price}}$
+                      {% endif %}
+                      <a href={% url 'core:remove-from-cart' order_item.item.slug%}><i class="fas float-right fa-trash"></i></a>
+                    </td>
+                </tr>
+            {%empty%}
+                <tr>
+                  <td colspan=5 >You cart is empty</td>
+                </tr>  
+                <tr>
+                  <td colspan=5 ><a class='btn btn-primary   float-right ' href="{% url 'core:home' %}">Continue Shopping</a></td>
+                </tr>
+            {% endfor %}
+            {% if objects.coupon %}
+                <tr class="bg-light text-danger text-bold">
+                  <td colspan=4>Coupon</td>
+                  <td > -${{objects.coupon.amount}}</td>
+                </tr>
+            {% endif %}
+            {% if objects.get_total%}
+                <tr>
+                <tr>
+                  <td colspan=4>Order Price</td>
+                  <td > ${{objects.get_total}}</td>
+                </tr>
+                <tr>
+                  <td colspan=5 >
+                    <a class='btn btn-primary mr-4 float-right ' href="{% url 'core:home' %}">Continue Shopping</a>
+                    <a class='btn btn-warning mr-1 float-right ' href="{% url 'core:checkout' %}">Proceed to checkout</a>
+                  </td>
+                </tr>
+                {% endif %}
+        </tbody>
+    </table>
+    
+</div>
+ <!--Section: Products v.3-->
+      <section class="text-center mb-4">
+        <h2 class="text-left">Recommended products for you</h2>
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+        {% for item in items %}
+          <!--Grid column-->
+          <div class="col-lg-3 col-md-6 mb-4">
+
+            <!--Card-->
+            <div class="card">
+
+              <!--Card image-->
+              <div class="view overlay">
+                <a href="{{item.get_absolute_url}}">
+                  <img src="{{item.image.url}}" class="card-img-top"
+                    alt="">
+                </a>
+                <a href="{{item.get_absolute_url}}">
+                  <div class="mask rgba-white-slight"></div>
+                </a>
+              </div>
+              <!--Card image-->
+
+              <!--Card content-->
+              <div class="card-body text-center">
+                <!--Category & Title-->
+                <a href="{{item.get_absolute_url}}" class="grey-text">
+                  <h5>{{item.get_category_display}}</h5>
+                </a>
+                <h5>
+                  <strong>
+                    <a href="{{item.get_absolute_url}}" class="dark-grey-text">{{item.title}}
+                      <span class="badge badge-pill {{item.get_label_display}}-color">NEW</span>
+                    </a>
+                  </strong>
+                </h5>
+  
+                <h4 class="font-weight-bold blue-text">
+                  <strong>
+                  {% if item.discount_price%}
+                  {{item.discount_price}}
+                  {% else %}
+                  {{item.price}}
+                  {% endif %}
+                  $</strong>
+                </h4>
+
+              </div>
+              <!--Card content-->
+
+            </div>
+            <!--Card-->
+
+          </div>
+          <!--Grid column-->
+        {% endfor %}
+        </div>
+        <!--Grid row-->
+
+       
+
+      </section>
+      <!--Section: Products v.3-->
+        
+    </div>
+  </main>
+  <!--Main layout-->
+
+ 
+  {% endblock content%}
+
+
