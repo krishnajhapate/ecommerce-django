@@ -13,9 +13,9 @@ PAYMENT_OPTIONS = (
 class CheckoutForm(forms.Form):
     shipping_address = forms.CharField(required=False)
     shipping_address2 = forms.CharField(required=False,)
-    shipping_country = CountryField(required=False,blank_label='select country').formfield(widget=CountrySelectWidget(attrs={
-        "class":"form-control custom-select d-block W-100"
-    }))
+    # shipping_country = CountryField(required=False,blank_label='select country').formfield(widget=CountrySelectWidget(attrs={
+    #     "class":"form-control custom-select d-block W-100"
+    # }))
     shipping_zip = forms.CharField(required=False)
     same_shipping_address = forms.BooleanField(widget=forms.CheckboxInput(),required=False)
     set_default_shipping = forms.BooleanField()
